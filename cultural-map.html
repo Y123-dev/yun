@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>云南民族文化地图</title>
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=WIIBZ-RY6LZ-EOBXL-ZICSL-723DK-C4FQY"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+        }
+
+        .nav-btn {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #2c3e50;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #eee;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 70vh;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>云南民族文化地图</h1>
+            <nav>
+                <a href="index.html" class="nav-btn">首页</a>
+                <a href="features.html" class="nav-btn">文化特征</a>
+                <a href="festivals.html" class="nav-btn">民俗节日</a>
+                <a href="costumes.html" class="nav-btn">民族服饰</a>
+                <a href="cultural-map.html" class="nav-btn">文化地图</a>
+            </nav>
+        </header>
+
+        <div id="map-container"></div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var center = new qq.maps.LatLng(25.0389, 102.7181);
+            var map = new qq.maps.Map(document.getElementById('map-container'), {
+                center: center,
+                zoom: 7,
+                minZoom: 6,
+                maxZoom: 12,
+                boundary: new qq.maps.LatLngBounds(
+                    new qq.maps.LatLng(21.1000, 97.5000),
+                    new qq.maps.LatLng(29.2000, 106.2000)
+                )
+            });
+
+            // 创建一个自定义的信息窗口
+            var customInfoWindow = {
+                div: document.createElement('div'),
+                setContent: function(content) {
+                    this.div.innerHTML = content;
+                },
+                open: function() {
+                    this.div.style.display = 'block';
+                },
+                close: function() {
+                    this.div.style.display = 'none';
+                }
+            };
+
+            // 设置自定义信息窗口的样式
+            customInfoWindow.div.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            document.body.appendChild(customInfoWindow.div);
+
+            // 定义景点数据
+            var locations = [
+                {
+                    position: new qq.maps.LatLng(25.0444, 102.7089),
+                    title: '云南民族村',
+                    content: '云南民族村是展示云南26个民族传统民居建筑、生活习俗和民族文化的大型民俗文化旅游区。',
+                    details: {
+                        address: '云南省昆明市西山区明波路',
+                        features: ['民族建筑展示', '民族歌舞表演', '民族美食体验', '民族服饰展示'],
+                        openTime: '9:00-17:30',
+                        description: '这里汇集了云南26个民族的传统民居建筑，游客可以近距离了解各民族的生活方式、建筑特色、服饰文化等。每天都有精彩的民族歌舞表演。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(26.8768, 100.2300),
+                    title: '丽江古城',
+                    content: '纳西族文化的代表，是UNESCO世界文化遗产，展现着纳西族的建筑特色和文化传统。',
+                    details: {
+                        address: '云南省丽江市古城区',
+                        features: ['纳西古建筑', '东巴文化', '纳西音乐', '传统手工艺'],
+                        openTime: '全天开放',
+                        description: '丽江古城是纳西族文化的活化石，这里保存着完整的纳西族传统建筑群落，东巴化博物馆展示着神秘的东巴文字和文化。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(24.4846, 98.5889),
+                    title: '德宏傣族景区',
+                    content: '这里是傣族文化的重要展示地，可以欣赏傣族传统建筑、服饰和节庆活动。',
+                    details: {
+                        address: '云南省德宏傣族景颇族自治州',
+                        features: ['傣族建筑', '泼水节活动', '傣族服饰', '傣族美食'],
+                        openTime: '8:30-17:00',
+                        description: '德宏傣族景区展示了傣族独特的建筑风格和生活习俗，每年的泼水节都会吸引大量游客前来参与。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(27.8255, 99.7001),
+                    title: '香格里拉',
+                    content: '藏族文化的重要展示地，这里有松赞林寺等藏传佛教建筑和藏族文化展示。',
+                    details: {
+                        address: '云南省迪庆藏族自治州香格里拉市',
+                        features: ['藏传佛教建筑', '藏族歌舞', '藏族服饰', '藏族美食'],
+                        openTime: '全天开放',
+                        description: '香格里拉是藏族文化的重要展示地，松赞林寺被誉为"小布达拉宫"，藏族传统文化在这里得到了很好的保护和传承。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(23.3688, 103.3756),
+                    title: '红河哈尼梯田',
+                    content: '世界文化遗产，展现哈尼族人民的智慧结晶和梯田文化。',
+                    details: {
+                        address: '云南省红河哈尼族彝族自治州元阳县',
+                        features: ['梯田文化', '哈尼族建筑', '传统农耕文化', '民族节日'],
+                        openTime: '全天开放',
+                        description: '哈尼梯田是哈尼族人民世代耕作的杰作，梯田与村落、森林、水系构成了完整的生态系统，展现了哈尼族的智慧。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.8516, 100.2301),
+                    title: '大理古城',
+                    content: '白族文化的代表，展现着白族的建筑艺术和历史文化。',
+                    details: {
+                        address: '云南省大理白族自治州大理市',
+                        features: ['白族建筑', '三道茶文化', '扎染艺术', '白族歌舞'],
+                        openTime: '全天开放',
+                        description: '大理古城是白族文化的重要载体，这里有著名的三道茶文化、扎染艺术，以及独特的白族建筑风格。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(22.0025, 100.7958),
+                    title: '西双版纳傣族园',
+                    content: '展示傣族传统文化和热带雨林景观的综合性景区。',
+                    details: {
+                        address: '云南省西双版纳傣族自治州景洪市',
+                        features: ['傣族建筑', '傣族歌舞', '傣族美食', '热带植物园'],
+                        openTime: '8:00-18:00',
+                        description: '西双版纳傣族园完整保留了傣族传统建筑和生活方式，游客可以体验傣族特色美食、欣赏民族歌舞表演。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(24.9708, 102.6337),
+                    title: '石林风景区',
+                    content: '彝族文化与自然奇观的完美结合，是世界自然遗产。',
+                    details: {
+                        address: '云南省昆明市石林彝族自治县',
+                        features: ['彝族��化展示', '民族歌舞表演', '传统服饰展示', '石林奇观'],
+                        openTime: '8:30-17:30',
+                        description: '石林不仅是自然景观，更是彝族文化的重要展示地。这里的阿诗玛文化、彝族服饰、传统歌舞都展现着独特的民族魅力。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(26.0181, 98.5784),
+                    title: '腾冲银杏村',
+                    content: '傈僳族文化与千年银杏的完美融合之地。',
+                    details: {
+                        address: '云南省保山市腾冲市',
+                        features: ['傈僳族民居', '银杏文化', '民族手工艺', '传统节日'],
+                        openTime: '全天开放',
+                        description: '这里是傈僳族人世代居住的地方，千年银杏与傈僳族文化相互交融，形成独特的文化景观。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.8292, 99.7068),
+                    title: '剑川木雕城',
+                    content: '白族传统工艺的代表，展现精湛的木雕技艺。',
+                    details: {
+                        address: '云南省大理白族自治州剑���县',
+                        features: ['白族木雕艺术', '传统工艺展示', '木雕体验', '文化传承'],
+                        openTime: '9:00-17:00',
+                        description: '剑川木雕是白族传统工艺的瑰宝，这里不仅展示着精美的木雕作品，还有木雕艺人现场展示制作过程。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(27.2900, 103.7200),
+                    title: '东川红土地',
+                    content: '彝族农耕文化与红土地自然景观的完美结合。',
+                    details: {
+                        address: '云南省昆明市东川区',
+                        features: ['彝族农耕文化', '红土地景观', '民族节日', '传统习俗'],
+                        openTime: '全天开放',
+                        description: '这里不仅有震撼的红土地景观，更有彝族人民世代相传的农耕文化和生活智慧。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(23.6234, 102.8343),
+                    title: '建水古城',
+                    content: '汉族与少数民族文化交融的历史见证。',
+                    details: {
+                        address: '云南省红河哈尼族彝族自治州建水县',
+                        features: ['古城建筑', '紫陶艺术', '民族美食', '文化交融'],
+                        openTime: '全天开放',
+                        description: '建水古城是多民族文化交融的典范，这里的紫陶工艺、传统建筑、饮食文化都展现着独特的魅力。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.5916, 100.2390),
+                    title: '喜洲古镇',
+                    content: '白族建筑艺术和民居文化的博物馆。',
+                    details: {
+                        address: '云南省大理白族自治州大理市喜洲镇',
+                        features: ['白族民居', '扎染工艺', '传统美食', '民族节庆'],
+                        openTime: '全天开放',
+                        description: '喜洲是白族建筑的活教材，这里保存着大量的白族传统民居，同时也是白族扎染、美食等非物质文化遗产的重传承地。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(24.7829, 102.8426),
+                    title: '九乡彝族洞穴',
+                    content: '彝族文化与喀斯特地貌的完美结合地。',
+                    details: {
+                        address: '云南省宜良县九乡彝族回族自治乡',
+                        features: ['彝族洞穴文化', '溶洞奇观', '民族歌舞', '传统祭祀'],
+                        openTime: '8:00-17:30',
+                        description: '九乡是彝族先民崇拜自然、敬畏自然的文化遗址，这里的溶洞群与彝族传统文化相互交融，形成独特的洞穴文化景观。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.6012, 100.2679),
+                    title: '崇圣寺三塔',
+                    content: '大理白族建筑艺术的巅峰之作。',
+                    details: {
+                        address: '云南省大理白族自治州大理市古城区',
+                        features: ['白族建筑艺术', '佛教文化', '建筑工艺', '历史遗迹'],
+                        openTime: '7:30-18:00',
+                        description: '崇圣寺三塔是大理白族建筑艺术的代表作，体现了白族人民精湛的建筑技艺，是研究白族建筑艺术的重要实物资料。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(26.8721, 100.2293),
+                    title: '木府',
+                    content: '纳西族土司文化的见证。',
+                    details: {
+                        address: '云南省丽江市古城区大研古城',
+                        features: ['纳西族建筑', '土司文化', '东巴文化', '历史遗迹'],
+                        openTime: '8:00-17:30',
+                        description: '木府是纳西族土司统治时期的政治中心，建筑融合了纳西、汉、藏等多民族建筑特色，是研究纳西族历史文化的重要遗址。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(22.5982, 101.0493),
+                    title: '勐泐大佛寺',
+                    content: '傣族佛教文化的圣地。',
+                    details: {
+                        address: '云南省西双版纳傣族自治州景洪市勐泐大佛寺',
+                        features: ['傣族佛教文化', '佛教建筑', '宗教仪式', '傣族艺术'],
+                        openTime: '6:00-18:30',
+                        description: '勐泐大佛寺是西双版纳最大的佛教寺院，这里保存着傣族传统的佛教文化，每年都会举行传统的泼水节等民族节日活动。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(24.8821, 98.8593),
+                    title: '瑞丽江畔',
+                    content: '傣族、景颇族文化交融的边境风情。',
+                    details: {
+                        address: '云南省德宏傣族景颇族自治州瑞丽市',
+                        features: ['边境文化', '民族服饰', '特色美食', '玉石文化'],
+                        openTime: '全天开放',
+                        description: '瑞丽是傣族、景颇族等少数民族聚居地，这里有独特的边境文化风情，是体验多民族文化交融的重要窗口。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.4916, 103.7964),
+                    title: '阿诗玛文化园',
+                    content: '彝族撒尼人的文化圣地。',
+                    details: {
+                        address: '云南省石林彝族自治县',
+                        features: ['阿诗玛文化', '彝族歌舞', '民族服饰', '传统习俗'],
+                        openTime: '9:00-17:00',
+                        description: '阿诗玛文化园展示了彝族撒尼人的传统文化，这里可以欣赏到《阿诗玛》史诗的艺术展示，了解彝族撒尼人的生活习俗。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.3470, 100.2762),
+                    title: '蝴蝶泉',
+                    content: '白族传说与自然景观的完美结合地。',
+                    details: {
+                        address: '云南省大理白族自治州大理市蝴蝶泉公园',
+                        features: ['白族传说', '民间故事', '自然景观', '白族文化'],
+                        openTime: '7:30-18:00',
+                        description: '蝴蝶泉不仅是一处自然景观，更是白族"蝶恋花"传说的发源地，每年都有白族传统节日活动在此举行。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(27.1442, 100.0722),
+                    title: '玉龙雪山甘坪子',
+                    content: '纳西族东巴祭祀文化圣地。',
+                    details: {
+                        address: '云南省丽江市玉龙纳西族自治县',
+                        features: ['东巴祭祀', '纳西族文化', '传统仪式', '自然崇拜'],
+                        openTime: '全天开放',
+                        description: '这里是纳西族重要的祭祀场所，东巴祭司在此举行传统仪式，展现着纳西族独特的东巴文化。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(23.8969, 100.0931),
+                    title: '普洱茶文化园',
+                    content: '展示傣族、哈尼族等少数民族茶文化。',
+                    details: {
+                        address: '云南省普洱市思茅区',
+                        features: ['茶文化展示', '制茶工艺', '茶道表演', '民族习俗'],
+                        openTime: '8:30-17:30',
+                        description: '这里展示了云南少数民族悠久的茶文化传统，可以了解到傣族、哈尼族等民族的制茶工艺和茶俗文化。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(24.1120, 102.4671),
+                    title: '彝族火把节广场',
+                    content: '彝族最重要的传统节日活动场所。',
+                    details: {
+                        address: '云南省楚雄彝族自治州楚雄市',
+                        features: ['火把节庆典', '彝族歌舞', '传统仪式', '民族美食'],
+                        openTime: '全天开放',
+                        description: '这里是彝族火把节的主要庆祝场所，每年农历六月二十四日都会举行盛大的火把节庆典活动。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(25.7061, 100.1587),
+                    title: '周城古镇',
+                    content: '白族传统建筑与民居文化的典范。',
+                    details: {
+                        address: '云南省大理白族自治州大理市周城镇',
+                        features: ['白族民居', '传统建筑', '民间工艺', '白族饮食'],
+                        openTime: '全天开放',
+                        description: '周城古镇保存着完整的白族传统民居建筑群，这里的砖雕、木雕、石雕艺术展现着白族独特的建筑文化。'
+                    }
+                },
+                {
+                    position: new qq.maps.LatLng(22.7829, 100.9797),
+                    title: '基诺山寨',
+                    content: '基诺族文化的活态博物馆。',
+                    details: {
+                        address: '云南省西双版纳傣族自治州景洪市基诺乡',
+                        features: ['基诺族建筑', '传统习俗', '民族服饰', '茶文化'],
+                        openTime: '8:00-17:00',
+                        description: '这里是中国唯一的基诺族聚居地，保存着最完整的基诺族传统文化，可以体验到独特的基诺族生活方式。'
+                    }
+                }
+            ];
+
+            // 为每个景点创建标记和点击事件
+            locations.forEach(function(loc) {
+                var marker = new qq.maps.Marker({
+                    position: loc.position,
+                    map: map,
+                    title: loc.title
+                });
+
+                // 添加点击事件监听器
+                qq.maps.event.addListener(marker, 'click', function() {
+                    var features = loc.details.features.map(function(feature) {
+                        return '<li>' + feature + '</li>';
+                    }).join('');
+
+                    var contentHTML = 
+                        '<div style="padding:20px; max-width:400px; position:relative;">' +
+                        '<button onclick="this.parentElement.parentElement.style.display=\'none\'" ' +
+                        'style="position:absolute; right:10px; top:10px; border:none; background:none; cursor:pointer; font-size:20px;">×</button>' +
+                        '<h3 style="margin:0 0 10px 0; color:#2c3e50;">' + loc.title + '</h3>' +
+                        '<p style="margin:0 0 10px 0; color:#666;">' + loc.content + '</p>' +
+                        '<div style="border-top:1px solid #eee; padding-top:10px;">' +
+                        '<p><strong>地址：</strong>' + loc.details.address + '</p>' +
+                        '<p><strong>开放时间：</strong>' + loc.details.openTime + '</p>' +
+                        '<p><strong>特色亮点：</strong></p>' +
+                        '<ul style="margin:5px 0; padding-left:20px;">' + features + '</ul>' +
+                        '<p><strong>详细介绍：</strong></p>' +
+                        '<p style="margin:5px 0;">' + loc.details.description + '</p>' +
+                        '<div style="margin-top:15px; padding-top:15px; border-top:1px solid #eee;">' +
+                        '<p><strong>导航：</strong></p>' +
+                        '<div style="display:flex; gap:10px; margin-top:10px;">' +
+                        '<a href="https://apis.map.qq.com/uri/v1/routeplan?type=drive' + 
+                        '&to=' + encodeURIComponent(loc.title) +
+                        '&tocoord=' + loc.position.getLat() + ',' + loc.position.getLng() +
+                        '&policy=0&referer=myapp" ' +
+                        'target="_blank" style="text-decoration:none; padding:8px 15px; background-color:#1aad19; color:white; border-radius:5px; flex:1; text-align:center;">驾车导航</a>' +
+                        
+                        '<a href="https://apis.map.qq.com/uri/v1/routeplan?type=bus' +
+                        '&to=' + encodeURIComponent(loc.title) +
+                        '&tocoord=' + loc.position.getLat() + ',' + loc.position.getLng() +
+                        '&policy=0&referer=myapp" ' +
+                        'target="_blank" style="text-decoration:none; padding:8px 15px; background-color:#2d8cf0; color:white; border-radius:5px; flex:1; text-align:center;">公交导航</a>' +
+                        
+                        '<a href="https://apis.map.qq.com/uri/v1/routeplan?type=walk' +
+                        '&to=' + encodeURIComponent(loc.title) +
+                        '&tocoord=' + loc.position.getLat() + ',' + loc.position.getLng() +
+                        '&policy=0&referer=myapp" ' +
+                        'target="_blank" style="text-decoration:none; padding:8px 15px; background-color:#ff9900; color:white; border-radius:5px; flex:1; text-align:center;">步行导航</a>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    customInfoWindow.setContent(contentHTML);
+                    customInfoWindow.open();
+                });
+            });
+
+            // 点击地图时关闭信息窗口
+            qq.maps.event.addListener(map, 'click', function() {
+                customInfoWindow.close();
+            });
+
+            // 点击ESC键关闭信息窗口
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    customInfoWindow.close();
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

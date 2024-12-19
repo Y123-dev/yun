@@ -1,0 +1,135 @@
+:root {
+    --primary-color: #e84c3d;
+    --secondary-color: #2c3e50;
+    --accent-color: #f1c40f;
+    --background-color: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: var(--secondary-color);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.main-nav {
+    margin: 20px 0;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    background: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* 特征部分样式 */
+.feature-section {
+    margin-bottom: 60px;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-section h2 {
+    color: var(--primary-color);
+    font-size: 2em;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card h3 {
+    color: var(--secondary-color);
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.8;
+}
+
+/* 为不同特征设置不同的强调色 */
+.diversity h2 { border-color: #FF6B6B; }
+.integration h2 { border-color: #4ECDC4; }
+.primitive h2 { border-color: #45B7D1; }
+.religious h2 { border-color: #96CEB4; }
+.entertainment h2 { border-color: #FFEEAD; }
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .feature-section {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .feature-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .feature-section h2 {
+        font-size: 1.8em;
+    }
+} 

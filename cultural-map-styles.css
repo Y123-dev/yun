@@ -1,0 +1,119 @@
+:root {
+    --primary-color: #e84c3d;
+    --secondary-color: #2c3e50;
+    --accent-color: #f1c40f;
+    --background-color: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: var(--secondary-color);
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.main-nav {
+    margin: 20px 0;
+}
+
+.nav-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    background: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* 地图内容样式 */
+.map-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.map-container {
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cultural-map {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.cultural-map:hover {
+    transform: scale(1.02);
+}
+
+.map-description {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+.map-description h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.map-description p {
+    color: #666;
+    line-height: 1.8;
+    font-size: 1.1em;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .map-content {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .map-description h2 {
+        font-size: 1.5em;
+    }
+} 

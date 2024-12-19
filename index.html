@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>云南民族文化</title>
+    <link rel="stylesheet" href="calendar-styles.css">
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=WIIBZ-RY6LZ-EOBXL-ZICSL-723DK-C4FQY"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 整体布局优化 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        /* 导航栏样式 */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            margin: 0 15px !important;
+            text-decoration: none !important;
+            color: #2c3e50 !important;
+            padding: 10px 20px !important;
+            border-radius: 5px !important;
+            transition: all 0.3s ease !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .nav-btn i {
+            font-size: 18px !important;
+            margin-right: 5px !important;
+        }
+
+        .nav-btn span {
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            transition: none !important;
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        .nav-btn:hover {
+            background-color: #2c3e50 !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .nav-btn.active {
+            background-color: #2c3e50 !important;
+            color: white !important;
+        }
+
+        /* 背景图片容器 */
+        .background-container {
+            width: 100%;
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* 标题样式 */
+        .hero-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-text p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* 内容区域样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
+
+        /* 特色展示区域 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* 地图容器 */
+        #map-container {
+            width: 100%;
+            height: 500px;
+            margin-top: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        /* 修改屏幕样式 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+            cursor: pointer; /* 添加指针样式 */
+        }
+
+        .loading-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .loading-title {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .loading-subtitle {
+            font-size: 1.2em;
+            color: #fff;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+
+        /* 添加矩形动画 */
+        .loading-rect {
+            position: fixed;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: #3498db;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        .loading-rect.left {
+            left: 0;
+            transform: translateX(0);
+            background: #D4237A; /* 白族扎染中的玫瑰红 */
+        }
+
+        .loading-rect.right {
+            right: 0;
+            transform: translateX(0);
+            background: #4A5C95; /* 傣族服饰中的靛蓝色 */
+        }
+
+        .loading-rect.animate-left {
+            transform: translateX(-100%);
+        }
+
+        .loading-rect.animate-right {
+            transform: translateX(100%);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 添加页面内容的淡入效果 */
+        body > *:not(.loading-screen) {
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+        }
+
+        body.loaded > *:not(.loading-screen) {
+            opacity: 1;
+        }
+
+        /* 添加点击提示文字 */
+        .click-hint {
+            font-size: 1em;
+            color: #fff;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        /* 添加文字淡出动画样式 */
+        .loading-content.fade-out {
+            opacity: 0;
+            transition: opacity 0.3s ease-out; /* 加快淡出速度 */
+        }
+
+        /* 修改矩形动画时间 */
+        .loading-rect {
+            position: fixed;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: #3498db;
+            transition: transform 0.8s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-rect left"></div>
+        <div class="loading-rect right"></div>
+        <div class="loading-content">
+            <div class="loading-title">云南民族文化</div>
+            <div class="loading-subtitle">探索云南26个民族的独特魅力</div>
+            <div class="click-hint">点击任意位置进入</div>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="nav-btn active">
+                <i class="fas fa-home"></i><span>首页</span>
+            </a>
+            <a href="features.html" class="nav-btn">
+                <i class="fas fa-landmark"></i><span>文化特征</span>
+            </a>
+            <a href="festivals.html" class="nav-btn">
+                <i class="fas fa-calendar-alt"></i><span>民俗节日</span>
+            </a>
+            <a href="costumes.html" class="nav-btn">
+                <i class="fas fa-tshirt"></i><span>民族服饰</span>
+            </a>
+            <a href="cultural-map.html" class="nav-btn">
+                <i class="fas fa-map-marked-alt"></i><span>文化地图</span>
+            </a>
+        </nav>
+    </header>
+
+    <div class="background-container">
+        <img src="images/25c303c5d06acd195af3327bd6e46bf.jpg" alt="云南民族文化背景" class="background-image">
+        <div class="overlay"></div>
+        <div class="hero-text">
+            <h1>云南民族文化</h1>
+            <p>探索云南26个民族的独特文化魅力</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>民族服饰</h3>
+                <p>探索云南各民族独特的传统服饰，感受其中蕴含的文化内涵和艺术魅力。</p>
+            </div>
+            <div class="feature-card">
+                <h3>民俗节日</h3>
+                <p>了解云南各民族丰富多彩的传统节日，体验独特的节日文化。</p>
+            </div>
+            <div class="feature-card">
+                <h3>文化特征</h3>
+                <p>探索云南各民族独特的文化特色，了解其独特的生活方式和传统习俗。</p>
+            </div>
+            <div class="feature-card">
+                <h3>文化地图</h3>
+                <p>通过地图形式直观展现云南各地区的民族分布和文化特色。</p>
+            </div>
+        </div>
+
+        <div id="map-container"></div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            const loadingContent = document.querySelector('.loading-content');
+            const leftRect = document.querySelector('.loading-rect.left');
+            const rightRect = document.querySelector('.loading-rect.right');
+            const body = document.body;
+
+            // 显示动画
+            loadingScreen.addEventListener('click', function() {
+                // 先让文字淡出
+                loadingContent.classList.add('fade-out');
+                
+                // 短暂延迟后开始矩形动画
+                setTimeout(() => {
+                    leftRect.classList.add('animate-left');
+                    rightRect.classList.add('animate-right');
+                    body.classList.add('loaded');
+                    
+                    // 动画结束后移除加载层
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 800);
+                }, 300);
+            });
+        });
+
+        // 地图初始化代码保持不变
+        window.onload = function() {
+            var center = new qq.maps.LatLng(25.0389, 102.7181);
+            var map = new qq.maps.Map(document.getElementById('map-container'), {
+                center: center,
+                zoom: 7,
+                mapTypeId: qq.maps.MapTypeId.ROADMAP
+            });
+        }
+    </script>
+</body>
+</html>

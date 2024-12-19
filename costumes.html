@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>云南民族服饰</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .back-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin: 20px;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .costume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .costume-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .costume-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .costume-image {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            background: #f5f5f5;
+        }
+
+        .costume-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .costume-card:hover .costume-image img {
+            transform: scale(1.05);
+        }
+
+        .costume-image::before {
+            content: '民族服饰图片';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #999;
+            font-size: 14px;
+        }
+
+        .costume-info {
+            padding: 20px;
+        }
+
+        .costume-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .costume-brief {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .costume-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .feature-tag {
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        dialog {
+            padding: 20px;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            cursor: pointer;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--primary-color);
+        }
+
+        /* 加载动画样式 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 添加页面内容的淡入效果 */
+        .container {
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .container.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-title">云南民族服饰</div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">返回首页</a>
+    <div class="container">
+        <header>
+            <h1>云南民族服饰</h1>
+            <nav class="main-nav">
+                <a href="features.html" class="nav-btn">文化特征</a>
+                <a href="festivals.html" class="nav-btn">民俗节日</a>
+                <a href="costumes.html" class="nav-btn">民族服饰</a>
+                <a href="cultural-map.html" class="nav-btn">文化地图</a>
+            </nav>
+        </header>
+
+        <div class="costume-grid">
+            <!-- 彝族服饰卡片 -->
+            <div class="costume-card">
+                <div class="costume-image">
+                    <img src="./images/yizu_traditional_costume.jpg" 
+                         alt="彝族传统服饰" 
+                         onerror="handleImageError(this)"
+                         onload="handleImageSuccess(this)"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="costume-info">
+                    <h3 onclick="showYiDialog()">彝族服饰</h3>
+                    <p class="costume-brief">彝族服饰以黑色或青色为基调，搭配红黄等色，体现了彝族人民刚强尊贵的特���。</p>
+                    <div class="costume-features">
+                        <span class="feature-tag">黑色基调</span>
+                        <span class="feature-tag">红黄点缀</span>
+                        <span class="feature-tag">察尔瓦</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 白族服饰卡片 -->
+            <div class="costume-card">
+                <div class="costume-image">
+                    <img src="images/bai_costume.jpg" 
+                         alt="白族传统服饰" 
+                         onerror="handleImageError(this, 'bai')"
+                         onload="handleImageSuccess(this)"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="costume-info">
+                    <h3 onclick="showBaiDialog()">白族服饰</h3>
+                    <p class="costume-brief">白族服饰以其清雅素净的风格著称，体现了白族人民的审美情趣。</p>
+                    <div class="costume-features">
+                        <span class="feature-tag">白色为主</span>
+                        <span class="feature-tag">刺绣精美</span>
+                        <span class="feature-tag">衣襟装饰</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 傣族服饰卡片 -->
+            <div class="costume-card">
+                <div class="costume-image">
+                    <img src="images/daizu.jpg" 
+                         alt="傣族传统服饰"
+                         onerror="handleImageError(this, 'dai')"
+                         onload="handleImageSuccess(this)"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="costume-info">
+                    <h3 onclick="showDaiDialog()">傣族服饰</h3>
+                    <p class="costume-brief">傣族服饰淡雅美观，既讲究实用，又有很强的装饰意味。服饰色彩艳丽，风格独特。</p>
+                    <div class="costume-features">
+                        <span class="feature-tag">紧身内衣</span>
+                        <span class="feature-tag">彩色统裙</span>
+                        <span class="feature-tag">银质腰带</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 纳西族服饰卡片 -->
+            <div class="costume-card">
+                <div class="costume-image">
+                    <img src="images/394b7852db90d11baf1e1a5eed976bd.jpg" 
+                         alt="纳西族传统服饰"
+                         onerror="handleImageError(this, 'naxi')"
+                         onload="handleImageSuccess(this)"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="costume-info">
+                    <h3 onclick="showNaxiDialog()">纳西族服饰</h3>
+                    <p class="costume-brief">纳西族服饰以黑白为主色，女性服饰以"披星戴月"为特色，体现了纳西族人民勤劳朴实的特质。</p>
+                    <div class="costume-features">
+                        <span class="feature-tag">黑白主色</span>
+                        <span class="feature-tag">披星戴月</span>
+                        <span class="feature-tag">七星披肩</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 白族服饰对话框 -->
+        <dialog id="baiDialog">
+            <div>
+                <h3>白族服饰</h3>
+                <p>白族崇尚白色，不论男女服饰，在坝区或山区，都盛行以白色为尊贵。白族服装形制上分为大理型、怒江型、保山型、云龙型、玉溪型等，不同地区的服饰在款式上略有差异，但基本构件一致。白族服饰的特��是色彩鲜艳、图案精美，常配以各种饰品，如头饰、耳环、项链等。</p>
+                <button onclick="closeBaiDialog()">关闭</button>
+            </div>
+        </dialog>
+
+        <!-- 傣族服饰对话框 -->
+        <dialog id="daiDialog">
+            <div>
+                <h3>傣族服饰</h3>
+                <p>傣族服饰淡雅美观，既讲究实用，又有很强的装饰意味。傣族男子的服饰差别不大，一般常穿无领对襟或大襟小袖短衫，下着长管裤，以白布、水红布或蓝布包头。傣族妇女的服饰因地区而异，西双版纳的傣族妇女上着各色紧身内衣，外罩紧无领窄袖短衫，下穿彩色统裙，长及脚面，并用精美的银质腰带束裙；德宏一带的傣族妇女，一部分也穿大统裙短上衣，色彩艳丽，一部分则穿白色或其它浅色的大襟短衫，下着长裤，束一绣花围腰，婚后改穿对襟短衫和统裙；新平、元江一带的"花腰傣"，上穿开襟短衫，着黑裙，裙上以彩色条和银泡装饰，缀成各式图案，光彩耀目。</p>
+                <button onclick="closeDaiDialog()">关闭</button>
+            </div>
+        </dialog>
+
+        <!-- 彝族服饰对话框 -->
+        <dialog id="yiDialog">
+            <div>
+                <h3>彝族服饰</h3>
+                <p>彝族尚黑服饰一般以黑色或青色为基调，衬以红、黄等色，分别象征刚强尊贵、热烈和善良。其服饰的款式多样，不同区域支系的服饰各具特色。例如，凉山地区的彝族服饰四季冷凉，气候变化不大，所以彝族服饰季节性不明显，察尔瓦（披衫）常年皆着；而楚雄区的彝族服饰则更加重视色彩的搭配装饰的精美。</p>
+                <button onclick="closeYiDialog()">关闭</button>
+            </div>
+        </dialog>
+
+        <!-- 纳西族服饰对话框 -->
+        <dialog id="naxiDialog">
+            <div>
+                <h3>纳西族服饰</h3>
+                <p>纳西族崇尚黑色和白色，传统服饰以黑、白为主色。纳西族男性服饰多为短衣配长裤，外加插有锦鸡尾羽配饰的小毡帽；女性服饰则以"披星戴月"为最大特色，七星羊皮披肩是纳西族妇女的传统服饰，其上方下圆，并排钉着七个绣花圆布，每圈中有一对垂穗，代表七颗星，象征纳西族妇女早出晚归、披星戴月，非常勤劳。</p>
+                <button onclick="closeNaxiDialog()">关闭</button>
+            </div>
+        </dialog>
+    </div>
+
+    <script>
+        const yiDialog = document.getElementById('yiDialog');
+        const baiDialog = document.getElementById('baiDialog');
+        const daiDialog = document.getElementById('daiDialog');
+        const naxiDialog = document.getElementById('naxiDialog');
+
+        function showYiDialog() {
+            yiDialog.showModal();
+        }
+
+        function closeYiDialog() {
+            yiDialog.close();
+        }
+
+        function showBaiDialog() {
+            baiDialog.showModal();
+        }
+
+        function closeBaiDialog() {
+            baiDialog.close();
+        }
+
+        function showDaiDialog() {
+            daiDialog.showModal();
+        }
+
+        function closeDaiDialog() {
+            daiDialog.close();
+        }
+
+        function showNaxiDialog() {
+            naxiDialog.showModal();
+        }
+
+        function closeNaxiDialog() {
+            naxiDialog.close();
+        }
+
+        function handleImageError(img, type) {
+            console.error('图片加载失败');
+            console.log('当前图片路径:', img.src);
+            console.log('页面URL:', window.location.href);
+            
+            // 根据类型选择正确的图片
+            const imageName = type === 'bai' ? 'bai_costume.jpg' : 'yizu_traditional_costume.jpg';
+            
+            // 尝试不同的路径
+            if (img.src.includes('/images/')) {
+                img.src = 'images/' + imageName;
+            } else if (img.src.includes('images/')) {
+                img.src = '../images/' + imageName;
+            }
+        }
+
+        function handleImageSuccess(img) {
+            console.log('图片加载成功:', img.src);
+            img.style.display = 'block';
+        }
+
+        // 添加页面加载完成后的动画控制
+        window.addEventListener('load', function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            const container = document.querySelector('.container');
+            
+            // 延迟一小段时间后开始动画
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                container.classList.add('visible');
+                
+                // 动画结束后移除加载层
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 800);
+            }, 1500); // 可以调整这个时间来控制加载动画的显示时长
+        });
+    </script>
+</body>
+</html> 

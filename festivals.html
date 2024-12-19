@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>云南民俗文化 - 节日日历</title>
+    <link rel="stylesheet" href="calendar-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>云南民俗节日日历</h1>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-btn">返回首页</a>
+            </nav>
+        </header>
+
+        <main class="festivals-content">
+            <div class="festival-calendar">
+                <div class="calendar-grid">
+                    <!-- 日历内容将通过JS动态生成 -->
+                </div>
+            </div>
+        </main>
+
+        <!-- 节日详情模态框 -->
+        <div class="festival-modal" id="festivalModal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modalFestivalName"></h2>
+                    <span class="modal-ethnic-tag" id="modalEthnicTag"></span>
+                </div>
+                <div class="modal-time" id="modalTime"></div>
+                <div class="modal-description" id="modalDescription"></div>
+            </div>
+        </div>
+    </div>
+    <script src="festivals.js"></script>
+</body>
+</html> 
